@@ -17,7 +17,7 @@
 
 backend:
   name: github
-  repo: christoph/landing-page-julia   # ← UPDATE after first push
+  repo: christoph8728/landing-page-julia
   branch: main
   auth_type: pat                       # PAT (Phase 1). Switch to `pkce` for prod.
 
