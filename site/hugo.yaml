@@ -6,6 +6,14 @@ title: 'Julia Schneidawind'
 enableRobotsTXT: true
 summaryLength: 40
 
+# When deploying to GitHub Pages on a project subpath
+# (e.g. https://user.github.io/repo/), root-absolute paths like /css/main.css
+# would resolve to the wrong domain root. canonifyURLs prepends the baseURL
+# (which the workflow overrides via --baseURL) to all root-relative URLs,
+# so /css/main.css becomes https://user.github.io/repo/css/main.css.
+# Once a custom domain is configured (site lives at /), this is a no-op.
+canonifyURLs: true
+
 # Google Analytics - set your GA4 measurement ID
 googleAnalytics: '' # Add your GA4 measurement ID here (e.g., 'G-XXXXXXXXXX')
 
