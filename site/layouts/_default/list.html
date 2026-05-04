@@ -1,0 +1,39 @@
+{{ define "main" }}
+<!-- Page Header -->
+<div class="pubpage-header">
+  {{ $label := partial "section-label.html" .Section }}
+  <div class="hlabel">{{ $label }}</div>
+  {{/* Prefer an _index.md title when provided, otherwise fall back to the
+       German section label so list pages never show "Projects" or "News" */}}
+  <h1 class="pubpage-h">{{ if and .Title (ne .Title (.Section | title)) }}{{ .Title }}{{ else }}{{ $label }}{{ end }}</h1>
+  {{ if .Content }}
+  <div class="pubpage-sub">
+    {{ .Content }}
+  </div>
+  {{ end }}
+</div>
+
+<div class="pubpage-body">
+  {{ $pages := where .Pages ".Params.draft" "!=" true }}
+  {{ if $pages }}
+    {{ range $pages }}
+    <div class="pub-e list-entry">
+      <a href="{{ .RelPermalink }}" class="pub-t">{{ .Title }}</a>
+      <div class="list-entry-date">{{ .Date.Format "January 2, 2006" }}</div>
+      {{ if .Summary }}
+      <p class="list-entry-sum">{{ .Summary }}</p>
+      {{ end }}
+      {{ if .Params.tags }}
+      <div class="tag-list tag-list--sm">
+        {{ range .Params.tags }}
+        <span class="tag tag--sm">{{ . }}</span>
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>
+    {{ end }}
+  {{ else }}
+    <p class="empty-message">Noch keine Einträge vorhanden.</p>
+  {{ end }}
+</div>
+{{ end }}

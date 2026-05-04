@@ -1,0 +1,17 @@
+{{- $author := hugo.Data.profile.name | default "Julia Schneidawind" -}}
+{{- $profTitle := hugo.Data.profile.title | default "" -}}
+{{- $inst := hugo.Data.profile.institution | default "" -}}
+{{- $desc := .Site.Params.description | default "" -}}
+{{- $domain := .Site.BaseURL | replaceRE "^https?://" "" | replaceRE "/$" "" -}}
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#F7F6F3"/>
+  <rect width="1200" height="6" fill="#9F580A"/>
+  <rect x="60" y="180" width="4" height="260" rx="2" fill="#115E59"/>
+  <circle cx="1050" cy="220" r="80" fill="none" stroke="#115E59" stroke-width="1.5" opacity="0.08"/>
+  <circle cx="1090" cy="280" r="50" fill="none" stroke="#9F580A" stroke-width="1.5" opacity="0.08"/>
+  <text x="88" y="240" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="16" font-weight="600" fill="#115E59" letter-spacing="3">{{ upper $inst }}</text>
+  <text x="88" y="330" font-family="Georgia, serif" font-size="64" font-weight="700" fill="#1a1a1a">{{ $author | htmlEscape }}</text>
+  <text x="88" y="385" font-family="Georgia, serif" font-size="28" font-weight="400" font-style="italic" fill="#555">{{ $profTitle | htmlEscape }}</text>
+  <text x="88" y="450" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="400" fill="#333">{{ $desc | htmlEscape }}</text>
+  <text x="1120" y="590" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#999" text-anchor="end">{{ $domain }}</text>
+</svg>

@@ -1,0 +1,12 @@
+{
+  "name": "landing-page-julia-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Maintenance CLIs for the academic site (BibTeX import, etc.)",
+  "scripts": {
+    "import-bibtex": "node import-bibtex.js"
+  },
+  "dependencies": {
+    "bibtex-parse": "^0.1.2"
+  }
+}

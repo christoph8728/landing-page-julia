@@ -1,0 +1,30 @@
+baseURL: 'https://julia-schneidawind.com'
+languageCode: 'de'
+defaultContentLanguage: 'de'
+title: 'Julia Schneidawind'
+
+enableRobotsTXT: true
+summaryLength: 40
+
+# Google Analytics - set your GA4 measurement ID
+googleAnalytics: '' # Add your GA4 measurement ID here (e.g., 'G-XXXXXXXXXX')
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
+params:
+  description: 'Historikerin · Deutsch-Jüdische Geschichte · LMU München'
+
+outputFormats:
+  OGImage:
+    mediaType: image/svg+xml
+    baseName: og-image
+    isPlainText: true
+    notAlternative: true
+
+outputs:
+  home: ['HTML', 'RSS', 'OGImage']
+  page: ['HTML', 'OGImage']
+  section: ['HTML', 'RSS']

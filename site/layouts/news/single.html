@@ -1,0 +1,39 @@
+{{ define "main" }}
+{{ $label := partial "section-label.html" .Section }}
+
+{{/* Map news_type enum to German display label */}}
+{{ $typeLabel := "" }}
+{{ with .Params.news_type }}
+  {{ if eq . "press" }}{{ $typeLabel = "Presseartikel" }}
+  {{ else if eq . "interview" }}{{ $typeLabel = "Interview" }}
+  {{ else if eq . "review" }}{{ $typeLabel = "Rezension" }}
+  {{ else }}{{ $typeLabel = . }}
+  {{ end }}
+{{ end }}
+
+<div class="pubpage-header">
+  <div class="hlabel">{{ $label }}{{ with $typeLabel }} · {{ . }}{{ end }}</div>
+  <h1 class="pubpage-h">{{ .Title }}</h1>
+
+  <div class="pub-meta-inline">
+    {{ with .Params.outlet }}<span class="pub-venue-italic">{{ . }}</span>{{ end }}
+    {{ with .Date }}<span>{{ .Format "2. January 2006" }}</span>{{ end }}
+    {{ with .Params.interviewer }}<span>Interview: {{ . }}</span>{{ end }}
+    {{ with .Params.author }}<span>von {{ . }}</span>{{ end }}
+  </div>
+
+  {{ with .Params.external_url }}
+  <div class="pub-actions">
+    <a href="{{ . }}" class="pub-l pub-action-btn" target="_blank" rel="noopener">Zum Beitrag &rarr;</a>
+  </div>
+  {{ end }}
+</div>
+
+<div class="bdetail-body bdetail-body--wide">
+  {{ if .Content }}{{ .Content }}{{ end }}
+
+  <div class="back-link-wrap">
+    <a href="/{{ .Section }}/" class="back-link">&larr; Zurück zu {{ $label }}</a>
+  </div>
+</div>
+{{ end }}

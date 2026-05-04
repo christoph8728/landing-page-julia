@@ -1,0 +1,26 @@
+{{- /*
+  pub-type-label — map a publication_type enum value to its German
+  display label. Called with the enum string as context:
+
+    {{ partial "pub-type-label.html" .Params.publication_type }}
+
+  Canonical enum (matches the frontmatter schema in CLAUDE.md):
+    monograph      → Monographie
+    edited_volume  → Sammelband
+    article        → Aufsatz
+    book_chapter   → Buchkapitel
+    newspaper      → Presseartikel
+    review         → Rezension
+
+  Unknown / empty values pass through unchanged so legacy entries keep
+  rendering something sensible.
+*/ -}}
+{{- $key := . -}}
+{{- if eq $key "monograph" -}}Monographie
+{{- else if eq $key "edited_volume" -}}Sammelband
+{{- else if eq $key "article" -}}Aufsatz
+{{- else if eq $key "book_chapter" -}}Buchkapitel
+{{- else if eq $key "newspaper" -}}Presseartikel
+{{- else if eq $key "review" -}}Rezension
+{{- else -}}{{ $key }}
+{{- end -}}

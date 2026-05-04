@@ -1,0 +1,18 @@
+{{- /*
+  section-label — map an English Hugo section name to its German display
+  label. Used for breadcrumbs, back-links, and section kickers.
+
+  Called with the section string as the dot context:
+    {{ partial "section-label.html" .Section }}
+
+  Unknown sections pass through title-cased (Hugo's default) so new
+  content types render reasonably without needing this partial updated.
+*/ -}}
+{{- $s := . -}}
+{{- if eq $s "posts" -}}Blog
+{{- else if eq $s "publications" -}}Publikationen
+{{- else if eq $s "projects" -}}Projekte
+{{- else if eq $s "teaching" -}}Lehre
+{{- else if eq $s "news" -}}Aktuelles
+{{- else -}}{{ $s | title }}
+{{- end -}}

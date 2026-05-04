@@ -1,0 +1,62 @@
+{{ define "main" }}
+<div class="pubpage-header">
+  <div class="hlabel">Publikation</div>
+  <h1 class="pubpage-h">{{ .Title }}</h1>
+
+  {{ if .Params.authors }}
+  <div class="pub-authors pub-authors--inline">
+    {{ delimit .Params.authors ", " }}
+  </div>
+  {{ end }}
+
+  <div class="pub-meta-inline">
+    {{ with .Params.venue }}<span class="pub-venue-italic">{{ . }}</span>{{ end }}
+    {{ with .Date }}<span>{{ .Format "2006" }}</span>{{ end }}
+    {{ with .Params.publication_type }}<span>{{ partial "pub-type-label.html" . }}</span>{{ end }}
+  </div>
+
+  {{ if or .Params.doi .Params.pdf }}
+  <div class="pub-actions">
+    {{ with .Params.doi }}<a href="https://doi.org/{{ . }}" class="pub-l pub-action-btn" target="_blank" rel="noopener">DOI</a>{{ end }}
+    {{ with .Params.pdf }}<a href="{{ . }}" class="pub-l pub-action-btn" target="_blank" rel="noopener">PDF</a>{{ end }}
+  </div>
+  {{ end }}
+</div>
+
+<div class="bdetail-body bdetail-body--wide">
+  {{ if .Params.abstract }}
+  <div class="pub-abstract-block">
+    <h2 class="pub-abstract-heading">Abstract</h2>
+    <p class="pub-abstract-text">{{ .Params.abstract }}</p>
+  </div>
+  {{ end }}
+
+  {{ if .Content }}
+  <div>{{ .Content }}</div>
+  {{ end }}
+
+  {{ if .Params.tags }}
+  <div class="keywords-section">
+    <div class="keywords-label">Keywords</div>
+    <div class="tag-list">
+      {{ range .Params.tags }}
+      <span class="tag">{{ . }}</span>
+      {{ end }}
+    </div>
+  </div>
+  {{ end }}
+
+  <details class="citation-block">
+    <summary>Zitieren / Cite (BibTeX)</summary>
+    <pre class="bibtex-code" id="bibtex-{{ .File.ContentBaseName }}"><code>{{- partial "bibtex-entry.html" . -}}</code></pre>
+    <div class="citation-actions">
+      <button class="copy-bibtex" data-target="bibtex-{{ .File.ContentBaseName }}" type="button">Kopieren</button>
+      <a class="download-bibtex" href="#" data-target="bibtex-{{ .File.ContentBaseName }}" download="{{ .File.ContentBaseName }}.bib">.bib herunterladen</a>
+    </div>
+  </details>
+
+  <div class="back-link-wrap">
+    <a href="/publications/" class="back-link">&larr; Zurück zu Publikationen</a>
+  </div>
+</div>
+{{ end }}

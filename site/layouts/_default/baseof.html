@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} — {{ .Site.Title }}{{ end }}</title>
+
+  {{- /* Description: prefer summary param, then auto Summary, then site description */ -}}
+  {{- $desc := "" -}}
+  {{- if .IsHome -}}
+    {{- $desc = .Site.Params.description -}}
+  {{- else if .Params.summary -}}
+    {{- $desc = .Params.summary -}}
+  {{- else if .Summary -}}
+    {{- $desc = .Summary | plainify -}}
+  {{- else -}}
+    {{- $desc = .Site.Params.description -}}
+  {{- end -}}
+  {{- $desc = $desc | plainify | truncate 160 -}}
+  <meta name="description" content="{{ $desc }}">
+
+  {{- /* OG Image: use the generated SVG for this page, fallback to home default */ -}}
+  {{- $ogImage := "" -}}
+  {{- with .OutputFormats.Get "OGImage" -}}
+    {{- $ogImage = .Permalink -}}
+  {{- end -}}
+  {{- if not $ogImage -}}
+    {{- with site.Home.OutputFormats.Get "OGImage" -}}
+      {{- $ogImage = .Permalink -}}
+    {{- end -}}
+  {{- end -}}
+
+  <meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
+  <meta property="og:description" content="{{ $desc }}">
+  {{- if $ogImage }}
+  <meta property="og:image" content="{{ $ogImage }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/svg+xml">
+  {{- end }}
+  <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+  <meta property="og:site_name" content="{{ .Site.Title }}">
+  <meta property="og:locale" content="de_DE">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
+  <meta name="twitter:description" content="{{ $desc }}">
+  {{- if $ogImage }}
+  <meta name="twitter:image" content="{{ $ogImage }}">
+  {{- end }}
+
+  <link rel="canonical" href="{{ .Permalink }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ .Site.Title }} RSS" href="{{ "index.xml" | absURL }}">
+
+  {{- /* Google Scholar meta tags for publication pages */ -}}
+  {{- if and .IsPage (eq .Section "publications") }}
+  <meta name="citation_title" content="{{ .Title }}">
+  {{- range .Params.authors }}
+  <meta name="citation_author" content="{{ . }}">
+  {{- end }}
+  {{- with .Params.year }}
+  <meta name="citation_publication_date" content="{{ . }}">
+  {{- end }}
+  {{- with .Params.venue }}
+  <meta name="citation_journal_title" content="{{ . }}">
+  {{- end }}
+  {{- with .Params.booktitle }}
+  <meta name="citation_conference_title" content="{{ . }}">
+  {{- end }}
+  {{- with .Params.publisher }}
+  <meta name="citation_publisher" content="{{ . }}">
+  {{- end }}
+  {{- with .Params.doi }}
+  <meta name="citation_doi" content="{{ . }}">
+  {{- end }}
+  {{- with .Params.pdf }}
+  <meta name="citation_pdf_url" content="{{ $.Site.BaseURL }}{{ . }}">
+  {{- end }}
+  {{- with .Params.isbn }}
+  <meta name="citation_isbn" content="{{ . }}">
+  {{- end }}
+  {{- with .Params.volume }}
+  <meta name="citation_volume" content="{{ . }}">
+  {{- end }}
+  {{- with .Params.number }}
+  <meta name="citation_issue" content="{{ . }}">
+  {{- end }}
+  {{- with .Params.pages }}
+    {{- $pp := split . "-" }}
+    {{- if ge (len $pp) 1 }}
+  <meta name="citation_firstpage" content="{{ trim (index $pp 0) " " }}">
+    {{- end }}
+    {{- if ge (len $pp) 2 }}
+  <meta name="citation_lastpage" content="{{ trim (index $pp 1) " " }}">
+    {{- end }}
+  {{- end }}
+  {{- with .Params.language }}
+  <meta name="citation_language" content="{{ . }}">
+  {{- end }}
+  {{- end }}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lightbox.css">
+  <link rel="stylesheet" href="/css/print.css" media="print">
+
+  {{- /* JSON-LD structured data — built as a dict and jsonified once */ -}}
+  {{- $author := dict "@type" "Person" "name" hugo.Data.profile.name "url" .Site.BaseURL -}}
+  {{- with hugo.Data.profile.orcid }}{{ $author = merge $author (dict "sameAs" (slice (printf "https://orcid.org/%s" .))) }}{{ end -}}
+  {{- if .IsPage }}
+    {{- $ldType := "BlogPosting" -}}
+    {{- if eq .Section "publications" }}{{ $ldType = "ScholarlyArticle" }}{{ end -}}
+    {{- $ld := dict
+      "@context" "https://schema.org"
+      "@type" $ldType
+      "headline" .Title
+      "datePublished" (.Date.Format "2006-01-02")
+      "dateModified" (.Lastmod.Format "2006-01-02")
+      "author" $author
+      "description" $desc
+      "url" .Permalink -}}
+    {{- if $ogImage }}{{ $ld = merge $ld (dict "image" $ogImage) }}{{ end -}}
+    {{- with .Params.doi }}{{ $ld = merge $ld (dict "identifier" (printf "https://doi.org/%s" .)) }}{{ end }}
+  <script type="application/ld+json">{{ $ld | jsonify | safeJS }}</script>
+  {{- else if .IsHome }}
+    {{- $homeAuthor := dict "@type" "Person" "name" hugo.Data.profile.name "affiliation" hugo.Data.profile.institution -}}
+    {{- with hugo.Data.profile.orcid }}{{ $homeAuthor = merge $homeAuthor (dict "sameAs" (slice (printf "https://orcid.org/%s" .))) }}{{ end -}}
+    {{- $ld := dict
+      "@context" "https://schema.org"
+      "@type" "WebSite"
+      "name" .Site.Title
+      "url" .Site.BaseURL
+      "description" .Site.Params.description
+      "author" $homeAuthor }}
+  <script type="application/ld+json">{{ $ld | jsonify | safeJS }}</script>
+  {{- end }}
+
+  {{ partial "analytics.html" . }}
+  {{ block "head" . }}{{ end }}
+</head>
+<body>
+  {{ partial "nav.html" . }}
+  {{ block "main" . }}{{ end }}
+  {{ if not .IsHome }}{{ partial "footer.html" . }}{{ end }}
+  <script src="/js/lightbox.js" defer></script>
+  <script src="/js/citation.js" defer></script>
+  <script src="/js/email.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{{- $type := .Params.bibtex_type | default "article" -}}
+{{- $key := .File.ContentBaseName -}}
+@{{ $type }}{ {{ $key }},
+{{- with .Params.authors }}
+  author = { {{ delimit . " and " }} },
+{{- end }}
+  title = { {{ .Title }} },
+{{- with .Params.venue }}
+  journal = { {{ . }} },
+{{- end }}
+{{- with .Params.booktitle }}
+  booktitle = { {{ . }} },
+{{- end }}
+{{- with .Params.editors }}
+  editor = { {{ delimit . " and " }} },
+{{- end }}
+{{- with .Params.publisher }}
+  publisher = { {{ . }} },
+{{- end }}
+  year = { {{ .Params.year | default (.Date.Format "2006") }} },
+{{- with .Params.volume }}
+  volume = { {{ . }} },
+{{- end }}
+{{- with .Params.number }}
+  number = { {{ . }} },
+{{- end }}
+{{- with .Params.pages }}
+  pages = { {{ . }} },
+{{- end }}
+{{- with .Params.doi }}
+  doi = { {{ . }} },
+{{- end }}
+{{- with (or .Params.external_url .Params.url) }}
+  url = { {{ . }} },
+{{- end }}
+}

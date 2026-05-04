@@ -1,0 +1,13 @@
+<div class="snav-wrap">
+<nav class="snav">
+  <a href="/" class="smark">jschneidawind</a>
+  <ul>
+    <li><a href="/"{{ if .IsHome }} class="on"{{ end }}>Home</a></li>
+    <li><a href="/publications/"{{ if eq .Section "publications" }} class="on"{{ end }}>Publikationen</a></li>
+    <li><a href="/posts/"{{ if eq .Section "posts" }} class="on"{{ end }}>Blog</a></li>
+    <li><a href="/teaching/"{{ if eq .Section "teaching" }} class="on"{{ end }}>Lehre</a></li>
+    <li><a href="/projects/"{{ if eq .Section "projects" }} class="on"{{ end }}>Projekte</a></li>
+    <li><span class="email-protected" data-u="{{ hugo.Data.profile.email_user }}" data-d="{{ hugo.Data.profile.email_domain }}" data-text="Kontakt">[Kontakt]</span></li>
+  </ul>
+</nav>
+</div>

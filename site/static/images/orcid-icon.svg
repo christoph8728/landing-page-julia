@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ORCID iD icon — official two-colour form. The outer circle is ORCID green
+  (#A6CE39) and the inner glyph (letter i and arc) is white. Dimensions are
+  in a 256×256 viewBox so the icon scales cleanly at any size. See
+  https://info.orcid.org/brand-guidelines/ for the brand guidelines.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="ORCID iD">
+  <circle cx="128" cy="128" r="128" fill="#A6CE39"/>
+  <g fill="#FFFFFF">
+    <!-- i dot -->
+    <circle cx="86.3" cy="70.4" r="11.3"/>
+    <!-- i stem -->
+    <rect x="76.3" y="99.1" width="20" height="108.8"/>
+    <!-- D arc (the right-hand curved letter) -->
+    <path d="M108.9 99.1h42.3c40.3 0 58 28.8 58 54.4 0 27.8-21.8 54.4-57.8 54.4h-42.5V99.1zm20 90.7h20.3c28.9 0 35.7-21.9 35.7-36.3 0-23.4-14.9-36.3-36.3-36.3h-19.7v72.6z"/>
+  </g>
+</svg>

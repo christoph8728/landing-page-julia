@@ -1,0 +1,75 @@
+# Build the Hugo site and deploy to GitHub Pages.
+#
+# Triggered on every push to main and manual dispatch. The build step is
+# pure Hugo (no Node.js, no Cloudflare) — runs in ~30s on a free runner.
+#
+# Pages source must be set to "GitHub Actions" in Settings → Pages once,
+# after the first push. No secrets needed: Sveltia handles its own auth
+# in the user's browser at runtime.
+
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deploy; never cancel a running deploy mid-flight.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build with Hugo
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.160.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install Hugo
+        run: |
+          wget -q -O hugo.deb \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          sudo dpkg -i hugo.deb
+          rm hugo.deb
+
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Build site
+        # baseURL is overridden so generated absolute URLs match the deploy.
+        run: |
+          hugo \
+            --gc \
+            --minify \
+            --source site \
+            --baseURL "${{ steps.pages.outputs.base_url }}/"
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/public
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

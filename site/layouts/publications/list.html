@@ -1,0 +1,130 @@
+{{ define "main" }}
+<!-- Publications Page Header -->
+<div class="pubpage-header">
+  <div class="hlabel">Publikationen</div>
+  <h1 class="pubpage-h">Forschung &amp; Veröffentlichungen</h1>
+  <p class="pubpage-intro">
+    Monographien, Aufsätze und Beiträge zur deutsch-jüdischen Geschichte und Exilforschung.
+  </p>
+</div>
+
+<div class="pubpage-body">
+  {{ $pages := where .Pages ".Params.draft" "!=" true }}
+  {{ if $pages }}
+    {{/* Collect unique years */}}
+    {{ $years := slice }}
+    {{ range $pages }}
+      {{ $y := .Date.Format "2006" }}
+      {{ if not (in $years $y) }}{{ $years = $years | append $y }}{{ end }}
+    {{ end }}
+    {{ $years = sort $years "value" "desc" }}
+
+    {{/* A6 filter controls */}}
+    <div class="pub-filter-row">
+      <select class="pub-filter-select" id="pub-year-filter" onchange="filterPubs()">
+        <option value="">Alle Jahre</option>
+        {{ range $years }}<option value="{{ . }}">{{ . }}</option>{{ end }}
+      </select>
+      <select class="pub-filter-select" id="pub-type-filter" onchange="filterPubs()">
+        <option value="">Alle Typen</option>
+        <option value="monograph">Monographie</option>
+        <option value="edited_volume">Sammelband</option>
+        <option value="article">Aufsatz</option>
+        <option value="book_chapter">Buchkapitel</option>
+        <option value="newspaper">Presseartikel</option>
+        <option value="review">Rezension</option>
+      </select>
+      <button class="pub-filter-reset" onclick="resetFilter()">Zurücksetzen</button>
+    </div>
+
+    {{ range $years }}
+      {{ $year := . }}
+      <div class="yr-label" data-year="{{ $year }}">{{ $year }}</div>
+      {{ range $pages }}
+        {{ if eq (.Date.Format "2006") $year }}
+        {{ if .Params.cover_image }}
+        <div class="pub-with-cover" data-year="{{ $year }}" data-type="{{ .Params.publication_type }}">
+          <div class="pub-cover">
+            <img src="{{ .Params.cover_image }}" alt="{{ .Title }}">
+          </div>
+          <div>
+            {{ if .Params.authors }}
+              {{ $authors := .Params.authors }}
+              <div class="pub-authors">
+                {{ if gt (len $authors) 5 }}
+                  {{ range first 3 $authors }}{{ . }}, {{ end }}et al.
+                {{ else }}
+                  {{ delimit $authors ", " }}.
+                {{ end }}
+              </div>
+            {{ end }}
+            <a href="{{ .RelPermalink }}" class="pub-t">{{ .Title }}</a>
+            {{ with .Params.venue }}
+            <div class="pub-in">{{ . }}</div>
+            {{ end }}
+            <div class="pub-m">
+              <span>{{ $year }}</span>
+              {{ with .Params.publication_type }}<span>{{ partial "pub-type-label.html" . }}</span>{{ end }}
+              {{ with .Params.doi }}<a class="pub-l" href="https://doi.org/{{ . }}" target="_blank" rel="noopener">DOI</a>{{ end }}
+              {{ with .Params.pdf }}<a class="pub-l" href="{{ . }}" target="_blank" rel="noopener">PDF</a>{{ end }}
+            </div>
+          </div>
+        </div>
+        {{ else }}
+        <div class="pub-e" data-year="{{ $year }}" data-type="{{ .Params.publication_type }}">
+          {{ if .Params.authors }}
+            {{ $authors := .Params.authors }}
+            <div class="pub-authors">
+              {{ if gt (len $authors) 5 }}
+                {{ range first 3 $authors }}{{ . }}, {{ end }}et al.
+              {{ else }}
+                {{ delimit $authors ", " }}.
+              {{ end }}
+            </div>
+          {{ end }}
+          <a href="{{ .RelPermalink }}" class="pub-t">{{ .Title }}</a>
+          {{ with .Params.venue }}
+          <div class="pub-in">{{ . }}</div>
+          {{ end }}
+          <div class="pub-m">
+            <span>{{ $year }}</span>
+            {{ with .Params.publication_type }}<span>{{ partial "pub-type-label.html" . }}</span>{{ end }}
+            {{ with .Params.doi }}<a class="pub-l" href="https://doi.org/{{ . }}" target="_blank" rel="noopener">DOI</a>{{ end }}
+            {{ with .Params.pdf }}<a class="pub-l" href="{{ . }}" target="_blank" rel="noopener">PDF</a>{{ end }}
+          </div>
+        </div>
+        {{ end }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ else }}
+    <p class="empty-message">Noch keine Publikationen vorhanden.</p>
+  {{ end }}
+</div>
+
+<script>
+function filterPubs() {
+  var year = document.getElementById('pub-year-filter').value;
+  var type = document.getElementById('pub-type-filter').value;
+
+  document.querySelectorAll('.pub-e, .pub-with-cover').forEach(function (el) {
+    var matchYear = !year || el.dataset.year === year;
+    var matchType = !type || el.dataset.type === type;
+    el.style.display = matchYear && matchType ? '' : 'none';
+  });
+
+  document.querySelectorAll('.yr-label').forEach(function (label) {
+    var yr = label.dataset.year;
+    var siblings = document.querySelectorAll('[data-year="' + yr + '"].pub-e, [data-year="' + yr + '"].pub-with-cover');
+    var anyVisible = Array.prototype.some.call(siblings, function (el) { return el.style.display !== 'none'; });
+    label.style.display = anyVisible ? '' : 'none';
+  });
+}
+
+function resetFilter() {
+  document.getElementById('pub-year-filter').value = '';
+  document.getElementById('pub-type-filter').value = '';
+  filterPubs();
+}
+</script>
+{{ end }}

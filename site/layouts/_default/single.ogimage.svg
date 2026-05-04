@@ -1,0 +1,46 @@
+{{- $title := .Title -}}
+{{- $maxChars := 28 -}}
+{{- $maxLines := 4 -}}
+{{- $words := split $title " " -}}
+{{- $lines := slice -}}
+{{- $current := "" -}}
+{{- range $words -}}
+  {{- $test := "" -}}
+  {{- if eq $current "" -}}
+    {{- $test = . -}}
+  {{- else -}}
+    {{- $test = printf "%s %s" $current . -}}
+  {{- end -}}
+  {{- if gt (len $test) $maxChars -}}
+    {{- if ne $current "" -}}
+      {{- $lines = $lines | append $current -}}
+    {{- end -}}
+    {{- $current = . -}}
+  {{- else -}}
+    {{- $current = $test -}}
+  {{- end -}}
+{{- end -}}
+{{- if ne $current "" -}}
+  {{- $lines = $lines | append $current -}}
+{{- end -}}
+{{- if gt (len $lines) $maxLines -}}
+  {{- $kept := first (sub $maxLines 1) $lines -}}
+  {{- $lastIdx := sub $maxLines 1 -}}
+  {{- $lastLine := index $lines $lastIdx -}}
+  {{- $lines = $kept | append (printf "%s…" $lastLine) -}}
+{{- end -}}
+{{- $author := hugo.Data.profile.name | default "Julia Schneidawind" -}}
+{{- $siteTitle := .Site.Title | default "Julia Schneidawind" -}}
+{{- $domain := .Site.BaseURL | replaceRE "^https?://" "" | replaceRE "/$" "" -}}
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#F7F6F3"/>
+  <rect width="1200" height="6" fill="#9F580A"/>
+  <rect x="60" y="160" width="4" height="300" rx="2" fill="#115E59"/>
+  <circle cx="1050" cy="220" r="80" fill="none" stroke="#115E59" stroke-width="1.5" opacity="0.08"/>
+  <circle cx="1090" cy="280" r="50" fill="none" stroke="#9F580A" stroke-width="1.5" opacity="0.08"/>
+  <text x="88" y="225" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="16" font-weight="600" fill="#115E59" letter-spacing="3">{{ upper $author }} · {{ upper $siteTitle }}</text>
+  {{- range $i, $line := $lines }}
+  <text x="88" y="{{ add 290 (mul $i 56) }}" font-family="Georgia, serif" font-size="44" font-weight="700" fill="#1a1a1a">{{ $line | htmlEscape }}</text>
+  {{- end }}
+  <text x="1120" y="590" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#999" text-anchor="end">{{ $domain }}</text>
+</svg>

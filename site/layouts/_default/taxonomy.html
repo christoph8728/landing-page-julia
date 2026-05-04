@@ -1,0 +1,21 @@
+{{ define "main" }}
+<div class="pubpage-header">
+  <div class="hlabel">Tag</div>
+  <h1 class="pubpage-h">{{ .Title }}</h1>
+  <p class="pubpage-sub">{{ len .Pages }} {{ if eq (len .Pages) 1 }}Beitrag{{ else }}Beiträge{{ end }}</p>
+</div>
+<div class="pubpage-body">
+  {{ range .Pages }}
+  <div class="bcard-c taxonomy-card">
+    <div class="bdate">{{ .Date.Format "Jan 2006" }}</div>
+    <div>
+      <a href="{{ .RelPermalink }}" class="bc-title-sm taxonomy-title">{{ .Title }}</a>
+      {{ with .Summary }}<div class="bc-sum">{{ . }}</div>{{ end }}
+    </div>
+  </div>
+  {{ end }}
+  <div class="back-link-wrap">
+    <a href="/tags/" class="back-link">&larr; Alle Schlagwörter</a>
+  </div>
+</div>
+{{ end }}

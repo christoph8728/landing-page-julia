@@ -1,0 +1,51 @@
+{{ define "main" }}
+{{ if .Params.image }}
+{{/* Hero with gradient overlay — matches design-site.html blog post detail */}}
+<div class="bdetail-hero">
+  <img src="{{ .Params.image }}" alt="{{ .Title }}">
+  <div class="bdetail-hero-overlay">
+    <div class="bdetail-kicker">{{ .Params.category | default "Blog" }} · {{ .Date.Format "January 2006" }}</div>
+    <div class="bdetail-title">{{ .Title }}</div>
+    {{ with .Params.image_caption }}
+    <div class="bdetail-cap">{{ . }}</div>
+    {{ end }}
+    <div class="bdetail-readtime">{{ .ReadingTime }} Min. Lesezeit</div>
+  </div>
+</div>
+{{ else }}
+{{/* Fallback when no featured image */}}
+<div class="pubpage-header">
+  <div class="hlabel">{{ .Params.category | default "Blog" }}</div>
+  <h1 class="pubpage-h">{{ .Title }}</h1>
+  <div class="detail-date">
+    {{ .Date.Format "2. January 2006" }}
+    <span class="detail-readtime">· {{ .ReadingTime }} Min. Lesezeit</span>
+  </div>
+  {{ if .Params.tags }}
+  <div class="tag-list detail-tags">
+    {{ range .Params.tags }}
+    <a href="/tags/{{ . | urlize }}/" class="tag">{{ . }}</a>
+    {{ end }}
+  </div>
+  {{ end }}
+</div>
+{{ end }}
+
+<div class="bdetail-body">
+  {{ .Content }}
+
+  {{ if .Params.tags }}
+  <div class="keywords-section">
+    <div class="tag-list">
+      {{ range .Params.tags }}
+      <a href="/tags/{{ . | urlize }}/" class="tag">{{ . }}</a>
+      {{ end }}
+    </div>
+  </div>
+  {{ end }}
+
+  <div class="back-link-wrap">
+    <a href="/posts/" class="back-link">&larr; Zurück zu {{ partial "section-label.html" .Section }}</a>
+  </div>
+</div>
+{{ end }}

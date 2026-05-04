@@ -1,0 +1,19 @@
+{{ define "main" }}
+<div class="pubpage-header">
+  <div class="hlabel">Lehre</div>
+  <h1 class="pubpage-h">Lehrveranstaltungen</h1>
+</div>
+<div class="pubpage-body">
+  {{ $courses := sort .Pages "Params.semester" "desc" }}
+  {{ range $courses }}
+  <div class="course-entry">
+    <div class="course-semester">{{ .Params.semester | default (.Date.Format "WS 2006") }}</div>
+    <div>
+      <a href="{{ .RelPermalink }}" class="pub-t">{{ .Title }}</a>
+      {{ with .Params.course_type }}<div class="pub-in">{{ . }}</div>{{ end }}
+      {{ with .Params.institution }}<div class="pub-m"><span>{{ . }}</span></div>{{ end }}
+    </div>
+  </div>
+  {{ end }}
+</div>
+{{ end }}

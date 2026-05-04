@@ -1,0 +1,264 @@
+# ──────────────────────────────────────────────────────────────────────────
+# Sveltia CMS configuration
+#
+# Sveltia is a Decap-compatible static CMS that talks directly to GitHub
+# via the Contents API. No backend, no Worker, no OAuth proxy needed.
+#
+# Auth: PAT (personal access token) for testing on Christoph's account.
+# To switch to GitHub OAuth (PKCE) for Julia's production setup:
+#   1. Register a new GitHub OAuth App in her GitHub Developer Settings.
+#   2. Replace `auth_type: pat` with `auth_type: pkce` and add `client_id:`.
+#   3. Set the OAuth App's callback URL to `https://<her-domain>/admin/`.
+#
+# Repo + branch: update `repo:` to `<github-user>/<repo-name>` after the
+# first push. Until then Sveltia reports a config error in the browser —
+# easy to spot and iterate on.
+# ──────────────────────────────────────────────────────────────────────────
+
+backend:
+  name: github
+  repo: christoph/landing-page-julia   # ← UPDATE after first push
+  branch: main
+  auth_type: pat                       # PAT (Phase 1). Switch to `pkce` for prod.
+
+# Where Sveltia stores uploaded images (path on disk, then URL prefix).
+media_folder: site/static/media
+public_folder: /media
+
+# Show preview pane next to editor for content types with a body.
+show_preview_links: true
+
+# UI language — Sveltia auto-translates its chrome.
+locale: de
+
+# ──────────────────────────────────────────────────────────────────────────
+# Collections
+# ──────────────────────────────────────────────────────────────────────────
+
+collections:
+
+  # ── BLOG POSTS ─────────────────────────────────────────────────────────
+  - name: posts
+    label: "Blog"
+    label_singular: "Beitrag"
+    folder: site/content/posts
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: md
+    format: yaml-frontmatter
+    summary: "{{date | date('YYYY-MM-DD')}} · {{title}}"
+    fields:
+      - { name: title,         label: "Titel",            widget: string }
+      - { name: date,          label: "Datum",            widget: datetime, date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
+      - { name: category,      label: "Kategorie",        widget: string,   required: false, hint: "z.B. Essay, Archivbericht" }
+      - { name: image,         label: "Titelbild",        widget: image,    required: false }
+      - { name: image_caption, label: "Bildunterschrift", widget: string,   required: false }
+      - { name: tags,          label: "Tags",             widget: list,     required: false, default: [] }
+      - { name: draft,         label: "Entwurf",          widget: boolean,  default: false }
+      - { name: body,          label: "Inhalt",           widget: markdown }
+
+  # ── PUBLICATIONS ───────────────────────────────────────────────────────
+  - name: publications
+    label: "Publikationen"
+    label_singular: "Publikation"
+    folder: site/content/publications
+    create: true
+    delete: true
+    slug: "{{year}}-{{slug}}"
+    extension: md
+    format: yaml-frontmatter
+    summary: "{{year}} · {{title}}"
+    sortable_fields: [year, date, title]
+    view_filters:
+      - { label: "Monographien",  field: publication_type, pattern: monograph }
+      - { label: "Aufsätze",      field: publication_type, pattern: article }
+      - { label: "Sammelbände",   field: publication_type, pattern: edited_volume }
+      - { label: "Buchkapitel",   field: publication_type, pattern: book_chapter }
+      - { label: "Presseartikel", field: publication_type, pattern: newspaper }
+      - { label: "Rezensionen",   field: publication_type, pattern: review }
+    fields:
+      - { name: title, label: "Titel", widget: string }
+      - name: authors
+        label: "Autor:innen"
+        widget: list
+        field: { name: name, label: "Name", widget: string }
+      - { name: year, label: "Jahr", widget: number, value_type: int, min: 1900, max: 2100 }
+      - { name: date, label: "Datum", widget: datetime, date_format: "YYYY-MM-DD", time_format: false, picker_utc: false, hint: "Für die Sortierung — bei Jahresangabe einfach 1. Januar nehmen." }
+      - name: publication_type
+        label: "Art der Publikation"
+        widget: select
+        options:
+          - { label: "Monographie",   value: monograph }
+          - { label: "Sammelband",    value: edited_volume }
+          - { label: "Aufsatz",       value: article }
+          - { label: "Buchkapitel",   value: book_chapter }
+          - { label: "Presseartikel", value: newspaper }
+          - { label: "Rezension",     value: review }
+      - name: bibtex_type
+        label: "BibTeX-Typ"
+        widget: select
+        hint: "Steuert das Format des Zitations-Exports."
+        options: [article, book, incollection, inbook, inproceedings, phdthesis, mastersthesis, techreport, unpublished, misc]
+      - { name: venue,        label: "Erschienen in",   widget: string,  required: false, hint: "Zeitschrift, Zeitung, Verlag …" }
+      - { name: publisher,    label: "Verlag",          widget: string,  required: false }
+      - { name: booktitle,    label: "Buchtitel",       widget: string,  required: false, hint: "Bei Buchkapiteln: Titel des Sammelbandes." }
+      - name: editors
+        label: "Herausgeber:innen"
+        widget: list
+        required: false
+        field: { name: name, widget: string }
+      - { name: volume,       label: "Band",            widget: string,  required: false }
+      - { name: number,       label: "Heft",            widget: string,  required: false }
+      - { name: pages,        label: "Seiten",          widget: string,  required: false, hint: "z.B. 174-194" }
+      - { name: doi,          label: "DOI",             widget: string,  required: false, pattern: ['^10\\.', "DOI muss mit '10.' beginnen"] }
+      - { name: external_url, label: "Externe URL",     widget: string,  required: false }
+      - { name: language,     label: "Sprache",         widget: string,  required: false, hint: "z.B. en, de" }
+      - { name: cover_image,  label: "Cover-Bild",      widget: image,   required: false }
+      - { name: highlight,    label: "Hervorheben",     widget: boolean, required: false, default: false, hint: "Auf der Startseite hervorheben." }
+      - name: awards
+        label: "Auszeichnungen"
+        widget: list
+        required: false
+        field: { name: award, widget: string }
+      - { name: isbn,         label: "ISBN",            widget: string,  required: false }
+      - { name: abstract,     label: "Abstract",        widget: text,    required: false }
+      - { name: tags,         label: "Tags",            widget: list,    required: false, default: [] }
+      - { name: draft,        label: "Entwurf",         widget: boolean, default: false }
+      - { name: body,         label: "Inhalt",          widget: markdown, required: false }
+
+  # ── PROJECTS ───────────────────────────────────────────────────────────
+  - name: projects
+    label: "Projekte"
+    label_singular: "Projekt"
+    folder: site/content/projects
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: md
+    format: yaml-frontmatter
+    summary: "{{title}}"
+    fields:
+      - { name: title,        label: "Titel",       widget: string }
+      - { name: subtitle,     label: "Untertitel",  widget: string,  required: false }
+      - { name: project_type, label: "Projekttyp",  widget: string,  required: false, hint: "z.B. Habilitationsprojekt, Forschungsprojekt" }
+      - name: status
+        label: "Status"
+        widget: select
+        required: false
+        options:
+          - { label: "Laufend",      value: laufend }
+          - { label: "Abgeschlossen", value: abgeschlossen }
+          - { label: "Geplant",       value: geplant }
+      - { name: featured, label: "Hervorgehoben", widget: boolean, required: false, default: false }
+      - name: collaborators
+        label: "Kooperationspartner:innen"
+        widget: list
+        required: false
+        field: { name: name, widget: string }
+      - { name: date,         label: "Datum",       widget: datetime, date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
+      - { name: external_url, label: "Externe URL", widget: string,  required: false }
+      - { name: image,        label: "Titelbild",   widget: image,   required: false }
+      - { name: tags,         label: "Tags",        widget: list,    required: false, default: [] }
+      - { name: draft,        label: "Entwurf",     widget: boolean, default: false }
+      - { name: body,         label: "Beschreibung", widget: markdown, required: false }
+
+  # ── NEWS / PRESS ───────────────────────────────────────────────────────
+  - name: news
+    label: "Aktuelles"
+    label_singular: "News-Eintrag"
+    folder: site/content/news
+    create: true
+    delete: true
+    slug: "{{year}}-{{month}}-{{slug}}"
+    extension: md
+    format: yaml-frontmatter
+    summary: "{{date | date('YYYY-MM')}} · {{outlet}} · {{title}}"
+    sortable_fields: [date, outlet, title]
+    view_filters:
+      - { label: "Interviews",   field: news_type, pattern: interview }
+      - { label: "Presse",       field: news_type, pattern: press }
+      - { label: "Rezensionen",  field: news_type, pattern: review }
+    fields:
+      - { name: title, label: "Titel", widget: string }
+      - { name: date,  label: "Datum", widget: datetime, date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
+      - name: news_type
+        label: "Typ"
+        widget: select
+        options:
+          - { label: "Presseartikel", value: press }
+          - { label: "Interview",     value: interview }
+          - { label: "Rezension",     value: review }
+      - { name: outlet,       label: "Medium",        widget: string,  hint: "z.B. FAZ, Deutschlandfunk, ZEIT" }
+      - { name: author,       label: "Autor:in",      widget: string,  required: false, hint: "Bei Presseartikeln." }
+      - { name: interviewer,  label: "Interviewer:in", widget: string,  required: false, hint: "Bei Interviews." }
+      - { name: external_url, label: "Externe URL",   widget: string }
+      - { name: image,        label: "Titelbild",     widget: image,   required: false }
+      - { name: draft,        label: "Entwurf",       widget: boolean, default: false }
+      - { name: body,         label: "Notizen",       widget: markdown, required: false }
+
+  # ── TEACHING ───────────────────────────────────────────────────────────
+  - name: teaching
+    label: "Lehre"
+    label_singular: "Lehrveranstaltung"
+    folder: site/content/teaching
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: md
+    format: yaml-frontmatter
+    summary: "{{semester}} · {{title}}"
+    fields:
+      - { name: title,       label: "Titel",       widget: string }
+      - { name: date,        label: "Datum",       widget: datetime, date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
+      - { name: semester,    label: "Semester",    widget: string,   hint: "z.B. Winter 2025/26" }
+      - { name: institution, label: "Institution", widget: string,   default: "LMU München" }
+      - name: course_type
+        label: "Veranstaltungsart"
+        widget: select
+        required: false
+        options: [Seminar, Vorlesung, Übung, Hauptseminar, Proseminar, Kolloquium]
+      - { name: tags,        label: "Schlagworte", widget: list,     required: false, default: [] }
+      - { name: draft,       label: "Entwurf",     widget: boolean,  default: false }
+      - { name: body,        label: "Beschreibung", widget: markdown, required: false }
+
+  # ── PROFILE (single YAML file) ─────────────────────────────────────────
+  - name: data
+    label: "Stammdaten"
+    files:
+      - name: profile
+        label: "Profil"
+        file: site/data/profile.yaml
+        extension: yml
+        format: yml
+        fields:
+          - { name: name,        label: "Name",          widget: string }
+          - { name: title,       label: "Titel",         widget: string,  required: false, hint: "z.B. Dr., Prof." }
+          - { name: position,    label: "Position",      widget: string,  required: false }
+          - { name: institution, label: "Institution",   widget: string,  required: false }
+          - { name: department,  label: "Lehrstuhl",     widget: string,  required: false }
+          - { name: city,        label: "Stadt",         widget: string,  required: false }
+          - { name: address,     label: "Adresse",       widget: text,    required: false }
+          - { name: email_user,   label: "E-Mail (lokaler Teil)", widget: string, required: false, hint: "Vor dem @ — z.B. julia.schneidawind" }
+          - { name: email_domain, label: "E-Mail (Domain)",       widget: string, required: false, hint: "Nach dem @ — z.B. lrz.uni-muenchen.de" }
+          - { name: phone,       label: "Telefon",       widget: string,  required: false }
+          - { name: orcid,       label: "ORCID iD",      widget: string,  required: false, hint: "Format: 0000-0000-0000-0000" }
+          - { name: bio_short,   label: "Kurzbiografie", widget: text,    required: false, hint: "1–2 Sätze für die Startseite." }
+          - { name: bio,         label: "Biografie",     widget: text,    required: false, hint: "Vollständige Biografie." }
+          - name: research_interests
+            label: "Forschungsschwerpunkte"
+            widget: list
+            required: false
+            field: { name: interest, widget: string }
+          - { name: photo,  label: "Portrait",       widget: image, required: false }
+          - { name: cv_de,  label: "CV (deutsch)",   widget: file,  required: false }
+          - { name: cv_en,  label: "CV (englisch)",  widget: file,  required: false }
+          - name: links
+            label: "Externe Links"
+            widget: object
+            required: false
+            fields:
+              - { name: lmu,            label: "LMU-Profil",        widget: string, required: false }
+              - { name: academia,       label: "Academia.edu",      widget: string, required: false }
+              - { name: google_scholar, label: "Google Scholar",    widget: string, required: false }
+              - { name: github,         label: "GitHub",            widget: string, required: false }

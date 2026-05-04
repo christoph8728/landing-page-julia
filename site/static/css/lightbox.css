@@ -1,0 +1,46 @@
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  cursor: zoom-out;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+  padding: 40px;
+}
+
+.lightbox-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-overlay img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+}
+
+.lightbox-caption {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+  font-family: 'DM Mono', ui-monospace, Menlo, monospace;
+  max-width: 700px;
+  text-align: center;
+  padding: 0 16px;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .lightbox-overlay { padding: 16px; }
+  .lightbox-caption { bottom: 12px; font-size: 12px; }
+}

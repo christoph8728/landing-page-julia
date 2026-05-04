@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="180">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="0.8">
+      <stop offset="0%" stop-color="#c4baa8"/>
+      <stop offset="40%" stop-color="#a8a090"/>
+      <stop offset="70%" stop-color="#8a8070"/>
+      <stop offset="100%" stop-color="#6e6458"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="180" fill="url(#g)"/>
+  <text x="120" y="95" text-anchor="middle" font-family="monospace" font-size="9" fill="rgba(240,232,220,.85)" letter-spacing="1">Feuchtwanger-Ausgabe</text>
+</svg>

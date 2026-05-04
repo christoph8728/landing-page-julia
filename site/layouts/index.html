@@ -1,0 +1,217 @@
+{{ define "main" }}
+<!-- Hero Section -->
+<div class="hero-wrap">
+<div class="hero">
+  <div class="hero-text">
+    <div class="hlabel">Historikerin · Deutsch-Jüdische Geschichte · LMU München</div>
+    <h1 class="hname">{{ hugo.Data.profile.name | default .Site.Title }}</h1>
+    <div class="hrole">{{ hugo.Data.profile.title }}{{ with hugo.Data.profile.department }}, {{ . }}{{ end }}</div>
+    <p class="hstmt">{{ hugo.Data.profile.bio_short | default hugo.Data.profile.bio }}</p>
+    <div class="hlinks">
+      {{ if and hugo.Data.profile.email_user hugo.Data.profile.email_domain }}<span class="email-protected hlink" data-u="{{ hugo.Data.profile.email_user }}" data-d="{{ hugo.Data.profile.email_domain }}">[E-Mail-Adresse wird im Browser angezeigt]</span>{{ end }}
+      {{ with hugo.Data.profile.academia }}<a class="hlink" href="{{ . }}" target="_blank" rel="noopener">Academia.edu</a>{{ end }}
+      {{ with hugo.Data.profile.orcid }}<a class="orcid-link" href="https://orcid.org/{{ . }}" target="_blank" rel="noopener"><img src="/images/orcid-icon.svg" alt="ORCID iD" width="16" height="16">{{ . }}</a>{{ end }}
+    </div>
+  </div>
+  {{ if hugo.Data.profile.photo }}
+  <div class="hero-photo">
+    <img src="{{ hugo.Data.profile.photo }}" alt="{{ hugo.Data.profile.name }}">
+  </div>
+  {{ else }}
+  <div class="hero-photo">
+    <div class="photo-placeholder">
+      <span class="ph-icon">👤</span>
+      <span>portrait.jpg</span>
+    </div>
+  </div>
+  {{ end }}
+</div><!-- .hero -->
+</div><!-- .hero-wrap -->
+
+<!-- Two-Column Body -->
+<div class="scols">
+  <main class="smain">
+
+<!-- Blog & Notizen -->
+{{ $posts := where .Site.RegularPages "Section" "posts" }}
+{{ $publishedPosts := where $posts ".Params.draft" "!=" true }}
+{{ if $publishedPosts }}
+<div class="sh">Blog &amp; Notizen</div>
+
+{{ range $index, $post := first 3 $publishedPosts }}
+  {{ if eq $index 0 }}
+  <!-- Card A: full-width image header -->
+  <div class="bcard-a">
+    {{ with $post.Params.image }}
+    <div class="bcard-img-full">
+      <img src="{{ . }}" alt="{{ $post.Title }}">
+    </div>
+    {{ end }}
+    <div class="bc-meta">{{ $post.Params.category | default "Blog" }} · {{ $post.Date.Format "January 2006" }}</div>
+    <div class="bc-title">{{ $post.Title }}</div>
+    <p class="bc-sum">{{ $post.Summary }}</p>
+    <a class="bc-readmore" href="{{ $post.RelPermalink }}">Weiterlesen →</a>
+    {{ with $post.Params.image_caption }}<div class="bc-caption">{{ . }}</div>{{ end }}
+  </div>
+  {{ else if eq $index 1 }}
+  <!-- Card B: image floated left -->
+  <div class="bcard-b">
+    {{ with $post.Params.image }}
+    <div class="bcard-img-left">
+      <img src="{{ . }}" alt="{{ $post.Title }}">
+    </div>
+    {{ end }}
+    <div>
+      <div class="bc-meta">{{ $post.Params.category | default "Blog" }} · {{ $post.Date.Format "Jan 2006" }}</div>
+      <div class="bc-title-sm">{{ $post.Title }}</div>
+      <div class="bc-sum">{{ $post.Summary }}</div>
+      <a class="bc-readmore" href="{{ $post.RelPermalink }}">Weiterlesen →</a>
+    </div>
+  </div>
+  {{ else }}
+  <!-- Card C: text only -->
+  <div class="bcard-c">
+    <div class="bdate">{{ $post.Date.Format "Jan 2006" }}</div>
+    <div>
+      <div class="bc-title-sm">{{ $post.Title }}</div>
+      <div class="bc-sum">{{ $post.Summary }}</div>
+    </div>
+  </div>
+  {{ end }}
+{{ end }}
+<a class="section-more" href="/posts/">Alle Beitr&auml;ge &rarr;</a>
+{{ end }}
+
+<!-- Publications Section -->
+{{ $publications := where .Site.RegularPages "Section" "publications" }}
+{{ if $publications }}
+<div class="sh sh--spaced">Neuere Publikationen</div>
+
+{{ range $index, $pub := first 3 $publications }}
+  {{ if and (eq $index 0) $pub.Params.cover_image }}
+  <!-- Publication with cover -->
+  <div class="pub-with-cover">
+    <div class="pub-cover">
+      <img src="{{ $pub.Params.cover_image }}" alt="{{ $pub.Title }}">
+    </div>
+    <div>
+      {{ if $pub.Params.authors }}
+        {{ $authors := $pub.Params.authors }}
+        {{ $authorCount := len $authors }}
+        <div class="pub-authors">
+          {{ if gt $authorCount 5 }}
+            {{ range first 3 $authors }}{{ . }}, {{ end }}et al.
+          {{ else }}
+            {{ delimit $authors ", " }}.
+          {{ end }}
+        </div>
+      {{ end }}
+      <div class="pub-t">{{ $pub.Title }}</div>
+      <div class="pub-in">{{ $pub.Params.venue }}</div>
+      <div class="pub-m">
+        <span>{{ $pub.Date.Format "2006" }}</span>
+        {{ with $pub.Params.publication_type }}<span>{{ partial "pub-type-label.html" . }}</span>{{ end }}
+        {{ with $pub.Params.doi }}<a class="pub-l" href="https://doi.org/{{ . }}">DOI</a>{{ end }}
+        {{ with $pub.Params.pdf }}<a class="pub-l" href="{{ . }}">PDF</a>{{ end }}
+      </div>
+    </div>
+  </div>
+  {{ else }}
+  <!-- Regular publication entry -->
+  <div class="pub-e">
+    {{ if $pub.Params.authors }}
+      {{ $authors := $pub.Params.authors }}
+      {{ $authorCount := len $authors }}
+      <div class="pub-authors">
+        {{ if gt $authorCount 5 }}
+          {{ range first 3 $authors }}{{ . }}, {{ end }}et al.
+        {{ else }}
+          {{ delimit $authors ", " }}.
+        {{ end }}
+      </div>
+    {{ end }}
+    <div class="pub-t">{{ $pub.Title }}</div>
+    <div class="pub-in">{{ $pub.Params.venue }}</div>
+    <div class="pub-m">
+      <span>{{ $pub.Date.Format "2006" }}</span>
+      {{ with $pub.Params.publication_type }}<span>{{ partial "pub-type-label.html" . }}</span>{{ end }}
+      {{ with $pub.Params.doi }}<a class="pub-l" href="https://doi.org/{{ . }}">DOI</a>{{ end }}
+      {{ with $pub.Params.pdf }}<a class="pub-l" href="{{ . }}">PDF</a>{{ end }}
+    </div>
+  </div>
+  {{ end }}
+{{ end }}
+<a class="section-more" href="/publications/">Alle Publikationen &rarr;</a>
+{{ end }}
+
+<!-- Projects Section -->
+{{ $projects := where .Site.RegularPages "Section" "projects" }}
+{{ $publishedProjects := where $projects ".Params.draft" "!=" true }}
+{{ if $publishedProjects }}
+<div class="sh sh--spaced">Projekte</div>
+
+<div class="section-grid">
+{{ range $publishedProjects }}
+  <div class="project-card">
+    {{ with .Params.image }}
+    <div class="project-card-img">
+      <img src="{{ . }}" alt="{{ $.Title }}">
+    </div>
+    {{ end }}
+    <div class="project-card-body">
+      <a href="{{ .RelPermalink }}" class="project-card-title">{{ .Title }}</a>
+      <p class="project-card-sum">{{ .Summary }}</p>
+      {{ if .Params.tags }}
+      <div class="tag-list tag-list--sm">
+        {{ range .Params.tags }}
+        <span class="tag tag--sm">{{ . }}</span>
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>
+  </div>
+{{ end }}
+</div>
+<a class="section-more" href="/projects/">Alle Projekte &rarr;</a>
+{{ end }}
+
+  </main>
+
+  <aside class="saside">
+    <!-- Contact -->
+    <div class="ab">
+      <div class="alabel">Kontakt</div>
+      <div class="acontact">
+        {{ if and hugo.Data.profile.email_user hugo.Data.profile.email_domain }}<span class="email-protected" data-u="{{ hugo.Data.profile.email_user }}" data-d="{{ hugo.Data.profile.email_domain }}">[E-Mail-Adresse wird im Browser angezeigt]</span>{{ end }}
+        <a href="#">{{ hugo.Data.profile.institution }}</a>
+      </div>
+    </div>
+
+    <!-- News -->
+    {{ $news := where .Site.RegularPages "Section" "news" }}
+    {{ if $news }}
+    <div class="ab">
+      <div class="alabel">Aktuelles</div>
+      {{ range first 5 $news }}
+      <div class="anews-item">
+        {{ with .Params.image }}
+        <div class="anews-photo">
+          <img src="{{ . }}" alt="{{ $.Title }}">
+        </div>
+        {{ end }}
+        <div class="anews-date">{{ .Date.Format "Jan 2006" }}</div>
+        <div class="anews-text">{{ .Title }}</div>
+      </div>
+      {{ end }}
+    </div>
+    {{ end }}
+  </aside>
+</div><!-- .scols -->
+
+<div class="sfooter-wrap">
+<footer class="sfooter">
+  <span>{{ hugo.Data.profile.name }} — {{ hugo.Data.profile.city }}</span>
+  <span>&copy; {{ now.Format "2006" }}</span>
+</footer>
+</div>
+{{ end }}

@@ -1,0 +1,180 @@
+/*
+ * Print stylesheet — academic site.
+ *
+ * Loaded via <link rel="stylesheet" media="print"> so it has zero
+ * cost on screen. Goal: a printed publication page or article should
+ * look like a clean offprint, not a screenshot of a navbar.
+ */
+
+@media print {
+  /* --- Hide chrome and interactive bits ----------------------------- */
+  .snav-wrap,
+  .snav,
+  nav,
+  .sfooter-wrap,
+  .sfooter,
+  footer,
+  .lightbox-overlay,
+  .reading-progress,
+  .back-link-wrap,
+  .pub-filter-row,
+  .citation-actions,
+  .copy-bibtex,
+  .download-bibtex,
+  .email-protected,
+  button,
+  .nav-toggle {
+    display: none !important;
+  }
+
+  /* --- Page setup --------------------------------------------------- */
+  @page {
+    margin: 20mm;
+  }
+
+  html,
+  body {
+    font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #000;
+    background: #fff;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Drop the two-column layout — print runs full width */
+  .scols,
+  .saside,
+  .smain {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .saside {
+    display: none !important;
+  }
+
+  /* --- Typography --------------------------------------------------- */
+  h1,
+  .pubpage-h,
+  .hname {
+    font-size: 18pt;
+    margin: 0 0 6pt;
+    color: #000;
+  }
+
+  h2 {
+    font-size: 14pt;
+    margin-top: 14pt;
+  }
+
+  h3 {
+    font-size: 12pt;
+  }
+
+  .hlabel,
+  .pubpage-sub,
+  .detail-date,
+  .pub-meta-inline {
+    font-size: 10pt;
+    color: #444;
+  }
+
+  /* --- Show full URLs for external links ---------------------------- */
+  a[href^="http"]::after,
+  a[href^="https"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555;
+    word-break: break-all;
+  }
+
+  /* But not for anchors (#foo) or mailto links on publication pages */
+  a[href^="#"]::after,
+  a[href^="mailto:"]::after {
+    content: "";
+  }
+
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  /* --- Citation block: keep it open and readable -------------------- */
+  .citation-block {
+    border: 1px solid #ccc;
+    margin: 14pt 0;
+    page-break-inside: avoid;
+  }
+
+  .citation-block > summary {
+    list-style: none;
+    font-weight: 600;
+    padding: 6pt 10pt;
+    border-bottom: 1px solid #ccc;
+    background: #f5f5f5;
+  }
+
+  .citation-block > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Force the <details> open on print even when collapsed on screen */
+  .citation-block[open] > *,
+  .citation-block > * {
+    display: block;
+  }
+
+  .bibtex-code {
+    font-family: 'DM Mono', Menlo, Monaco, monospace;
+    font-size: 9pt;
+    padding: 8pt 10pt;
+    background: #fafafa;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* --- Avoid awkward breaks ----------------------------------------- */
+  article,
+  .pub-e,
+  .pub-with-cover,
+  .bdetail-body,
+  .pubpage-header,
+  .citation-block,
+  h1,
+  h2,
+  h3 {
+    page-break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  /* --- Publication metadata stays inline, tidy ---------------------- */
+  .pub-authors {
+    font-style: normal;
+    color: #000;
+    margin: 0 0 4pt;
+  }
+
+  .pub-l,
+  .pub-action-btn {
+    border: none;
+    padding: 0;
+    background: none;
+    color: #000;
+  }
+}
