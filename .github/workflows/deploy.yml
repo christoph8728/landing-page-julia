@@ -12,6 +12,12 @@ name: Deploy site
 on:
   push:
     branches: [main]
+  # Daily rebuild at 00:05 UTC (~01:05 CET / 02:05 CEST) so posts with a
+  # future `date:` or `publishDate:` go live automatically when their
+  # publish window opens. Hugo defaults to buildFuture=false, which hides
+  # future-dated pages from the build until the date has passed.
+  schedule:
+    - cron: '5 0 * * *'
   workflow_dispatch:
 
 permissions:
