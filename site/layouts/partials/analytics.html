@@ -1,3 +1,11 @@
+{{- if hugo.IsProduction -}}
+<!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.digitalmeditations.net/js/pa-h0iYqn-_4KWkZELdTyJWX.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+{{- end -}}
 {{- if and hugo.IsProduction .Site.Config.Services.GoogleAnalytics.ID -}}
 <!-- Google Analytics (GA4) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id={{ .Site.Config.Services.GoogleAnalytics.ID }}"></script>
