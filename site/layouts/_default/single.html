@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ $label := partial "section-label.html" .Section }}
-<div class="pubpage-header">
+<div class="pubpage-header pubpage-header--narrow">
   <div class="hlabel">{{ $label }}</div>
   <h1 class="pubpage-h">{{ .Title }}</h1>
   {{ with .Params.summary }}<p class="post-lede">{{ . }}</p>{{ end }}

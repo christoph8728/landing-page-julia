@@ -19,9 +19,11 @@
     {{ range $pages }}
     <div class="pub-e list-entry">
       <a href="{{ .RelPermalink }}" class="pub-t">{{ .Title }}</a>
+      {{ if ne .Section "projects" }}
       <div class="list-entry-date">{{ .Date.Format "January 2, 2006" }}</div>
-      {{ if .Summary }}
-      <p class="list-entry-sum">{{ .Summary }}</p>
+      {{ end }}
+      {{ with .Summary }}
+      <p class="list-entry-sum">{{ . | plainify | truncate 240 }}</p>
       {{ end }}
       {{ if .Params.tags }}
       <div class="tag-list tag-list--sm">
