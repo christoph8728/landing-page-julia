@@ -9,6 +9,8 @@
     <p class="hstmt">{{ hugo.Data.profile.bio_short | default hugo.Data.profile.bio }}</p>
     <div class="hlinks">
       {{ if and hugo.Data.profile.email_user hugo.Data.profile.email_domain }}<span class="email-protected hlink" data-u="{{ hugo.Data.profile.email_user }}" data-d="{{ hugo.Data.profile.email_domain }}">[E-Mail-Adresse wird im Browser angezeigt]</span>{{ end }}
+      {{ with hugo.Data.profile.cv_de }}<a class="hlink" href="{{ . }}">CV (DE)</a>{{ end }}
+      {{ with hugo.Data.profile.cv_en }}<a class="hlink" href="{{ . }}">CV (EN)</a>{{ end }}
       {{ with hugo.Data.profile.academia }}<a class="hlink" href="{{ . }}" target="_blank" rel="noopener">Academia.edu</a>{{ end }}
       {{ with hugo.Data.profile.orcid }}<a class="orcid-link" href="https://orcid.org/{{ . }}" target="_blank" rel="noopener"><img src="/images/orcid-icon.svg" alt="ORCID iD" width="16" height="16">{{ . }}</a>{{ end }}
     </div>
@@ -36,7 +38,7 @@
 {{ $posts := where .Site.RegularPages "Section" "posts" }}
 {{ $publishedPosts := where $posts ".Params.draft" "!=" true }}
 {{ if $publishedPosts }}
-<div class="sh">Blog &amp; Notizen</div>
+<h2 class="sh">Blog &amp; Notizen</h2>
 
 {{ range $index, $post := first 3 $publishedPosts }}
   {{ if eq $index 0 }}
@@ -48,8 +50,8 @@
     </div>
     {{ end }}
     <div class="bc-meta">{{ $post.Params.category | default "Blog" }} · {{ $post.Date.Format "January 2006" }}</div>
-    <div class="bc-title">{{ $post.Title }}</div>
-    <p class="bc-sum">{{ $post.Summary }}</p>
+    <h3 class="bc-title"><a href="{{ $post.RelPermalink }}">{{ $post.Title }}</a></h3>
+    <div class="bc-sum">{{ $post.Summary }}</div>
     <a class="bc-readmore" href="{{ $post.RelPermalink }}">Weiterlesen →</a>
     {{ with $post.Params.image_caption }}<div class="bc-caption">{{ . }}</div>{{ end }}
   </div>
@@ -63,7 +65,7 @@
     {{ end }}
     <div>
       <div class="bc-meta">{{ $post.Params.category | default "Blog" }} · {{ $post.Date.Format "Jan 2006" }}</div>
-      <div class="bc-title-sm">{{ $post.Title }}</div>
+      <h3 class="bc-title-sm"><a href="{{ $post.RelPermalink }}">{{ $post.Title }}</a></h3>
       <div class="bc-sum">{{ $post.Summary }}</div>
       <a class="bc-readmore" href="{{ $post.RelPermalink }}">Weiterlesen →</a>
     </div>
@@ -73,7 +75,7 @@
   <div class="bcard-c">
     <div class="bdate">{{ $post.Date.Format "Jan 2006" }}</div>
     <div>
-      <div class="bc-title-sm">{{ $post.Title }}</div>
+      <h3 class="bc-title-sm"><a href="{{ $post.RelPermalink }}">{{ $post.Title }}</a></h3>
       <div class="bc-sum">{{ $post.Summary }}</div>
     </div>
   </div>
@@ -85,7 +87,7 @@
 <!-- Publications Section -->
 {{ $publications := where .Site.RegularPages "Section" "publications" }}
 {{ if $publications }}
-<div class="sh sh--spaced">Neuere Publikationen</div>
+<h2 class="sh sh--spaced">Neuere Publikationen</h2>
 
 {{ range $index, $pub := first 3 $publications }}
   {{ if and (eq $index 0) $pub.Params.cover_image }}
@@ -148,7 +150,7 @@
 {{ $projects := where .Site.RegularPages "Section" "projects" }}
 {{ $publishedProjects := where $projects ".Params.draft" "!=" true }}
 {{ if $publishedProjects }}
-<div class="sh sh--spaced">Projekte</div>
+<h2 class="sh sh--spaced">Projekte</h2>
 
 <div class="section-grid">
 {{ range $publishedProjects }}
@@ -160,7 +162,7 @@
     {{ end }}
     <div class="project-card-body">
       <a href="{{ .RelPermalink }}" class="project-card-title">{{ .Title }}</a>
-      <p class="project-card-sum">{{ .Summary }}</p>
+      <div class="project-card-sum">{{ .Summary }}</div>
       {{ if .Params.tags }}
       <div class="tag-list tag-list--sm">
         {{ range .Params.tags }}
@@ -183,7 +185,8 @@
       <div class="alabel">Kontakt</div>
       <div class="acontact">
         {{ if and hugo.Data.profile.email_user hugo.Data.profile.email_domain }}<span class="email-protected" data-u="{{ hugo.Data.profile.email_user }}" data-d="{{ hugo.Data.profile.email_domain }}">[E-Mail-Adresse wird im Browser angezeigt]</span>{{ end }}
-        <a href="#">{{ hugo.Data.profile.institution }}</a>
+        {{ with hugo.Data.profile.links.lmu }}<a href="{{ . }}" target="_blank" rel="noopener">Profil — {{ hugo.Data.profile.institution }}</a>{{ else }}<a href="#">{{ hugo.Data.profile.institution }}</a>{{ end }}
+        {{ with hugo.Data.profile.department }}<span class="acontact-dept">{{ . }}</span>{{ end }}
       </div>
     </div>
 
@@ -199,8 +202,8 @@
           <img src="{{ . }}" alt="{{ $.Title }}">
         </div>
         {{ end }}
-        <div class="anews-date">{{ .Date.Format "Jan 2006" }}</div>
-        <div class="anews-text">{{ .Title }}</div>
+        <div class="anews-date">{{ .Date.Format "Jan 2006" }}{{ with .Params.outlet }} · {{ . }}{{ end }}</div>
+        <div class="anews-text">{{ with .Params.external_url }}<a href="{{ . }}" target="_blank" rel="noopener">{{ $.Title }}</a>{{ else }}{{ $.Title }}{{ end }}</div>
       </div>
       {{ end }}
     </div>

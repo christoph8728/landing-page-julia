@@ -8,7 +8,7 @@
   --ink:   #1a1714;
   --ink2:  #3a3428;
   --ink3:  #6e6458;
-  --ink4:  #9a8e80;
+  --ink4:  #786c5a;
   --paper: #f4f1eb;
   --p2:    #ece7dd;
   --p3:    #dfd8cc;
@@ -50,6 +50,13 @@ a:hover { color: var(--acc); }
 .snav ul { display: flex; gap: 26px; list-style: none; }
 .snav a { font-family: var(--sans); font-size: 13px; font-weight: 500; letter-spacing: .02em; color: var(--ink3); text-decoration: none; }
 .snav a:hover, .snav a.on { color: var(--ink); }
+.snav a.on { color: var(--acc); border-bottom: 2px solid var(--acc); padding-bottom: 2px; }
+
+/* Heading-wrapped card titles — keep ink color, link only colors on hover */
+.bc-title, .bc-title-sm { font-weight: 500; }
+.bc-title a, .bc-title-sm a, .pub-t a, .taxonomy-title a { color: inherit; text-decoration: none; }
+.bc-title a:hover, .bc-title-sm a:hover, .pub-t a:hover { color: var(--acc); }
+.acontact-dept { display: block; font-family: var(--sans); font-size: 12px; color: var(--ink4); margin-top: 4px; line-height: 1.45; }
 
 /* ── HERO ───────────────────────────────────────────── */
 .hero-wrap { border-bottom: 1px solid var(--p3); }
@@ -252,7 +259,8 @@ a:hover { color: var(--acc); }
 /* ── MOBILE ─────────────────────────────────────────── */
 @media (max-width: 720px) {
   .hero { grid-template-columns: 1fr; }
-  .hero-photo { display: none; }
+  .hero-photo { display: block; height: 300px; order: -1; }
+  .hero-text { order: 0; }
   .hero-text { padding: 40px 20px; border-right: none; }
   .snav { padding: 0 20px; }
   .snav ul { gap: 16px; }
