@@ -125,16 +125,32 @@
     {{- with .Params.doi }}{{ $ld = merge $ld (dict "identifier" (printf "https://doi.org/%s" .)) }}{{ end }}
   <script type="application/ld+json">{{ $ld | jsonify | safeJS }}</script>
   {{- else if .IsHome }}
-    {{- $homeAuthor := dict "@type" "Person" "name" hugo.Data.profile.name "affiliation" hugo.Data.profile.institution -}}
-    {{- with hugo.Data.profile.orcid }}{{ $homeAuthor = merge $homeAuthor (dict "sameAs" (slice (printf "https://orcid.org/%s" .))) }}{{ end -}}
-    {{- $ld := dict
+    {{- /* Build sameAs list from any non-empty profile links */ -}}
+    {{- $sameAs := slice -}}
+    {{- with hugo.Data.profile.orcid }}{{ $sameAs = $sameAs | append (printf "https://orcid.org/%s" .) }}{{ end -}}
+    {{- with hugo.Data.profile.links.lmu }}{{ $sameAs = $sameAs | append . }}{{ end -}}
+    {{- with hugo.Data.profile.links.google_scholar }}{{ $sameAs = $sameAs | append . }}{{ end -}}
+    {{- with hugo.Data.profile.links.academia }}{{ $sameAs = $sameAs | append . }}{{ end -}}
+    {{- $affiliation := dict "@type" "Organization" "name" hugo.Data.profile.institution "url" "https://www.lmu.de" -}}
+    {{- $person := dict
+      "@context" "https://schema.org"
+      "@type" "Person"
+      "name" hugo.Data.profile.name
+      "url" .Site.BaseURL
+      "jobTitle" hugo.Data.profile.position
+      "affiliation" $affiliation
+      "description" hugo.Data.profile.bio_short -}}
+    {{- if $sameAs }}{{ $person = merge $person (dict "sameAs" $sameAs) }}{{ end -}}
+    {{- with hugo.Data.profile.photo }}{{ $person = merge $person (dict "image" .) }}{{ end -}}
+    {{- $ldSite := dict
       "@context" "https://schema.org"
       "@type" "WebSite"
       "name" .Site.Title
       "url" .Site.BaseURL
       "description" .Site.Params.description
-      "author" $homeAuthor }}
-  <script type="application/ld+json">{{ $ld | jsonify | safeJS }}</script>
+      "author" $person }}
+  <script type="application/ld+json">{{ $ldSite | jsonify | safeJS }}</script>
+  <script type="application/ld+json">{{ $person | jsonify | safeJS }}</script>
   {{- end }}
 
   {{ partial "analytics.html" . }}
