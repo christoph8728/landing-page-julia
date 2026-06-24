@@ -13,7 +13,7 @@ email_user: julia.schneidawind
 email_domain: lrz.uni-muenchen.de
 phone: +49 (0) 89 / 2180-6769
 orcid: ''
-bio_short: 'Historikerin an der LMU München. Dissertation: Schicksale und ihre Bücher (Vandenhoeck & Ruprecht, 2023), ausgezeichnet mit dem Eduard-Dukesz-Preis. Forschungsschwerpunkte: deutsch-jüdische Geschichte, Migrationsgeschichte und Material Culture Studies.'
+bio_short: 'Historikerin an der LMU München; Habilitationsprojekt zum Thema „Gewalt gegen Frauen im Nachkriegsdeutschland, 1945–1955"; Dissertation: Schicksale und ihre Bücher (Vandenhoeck & Ruprecht, 2023), ausgezeichnet mit dem Eduard-Dukesz-Preis. Forschungsschwerpunkte: deutsch-jüdische Geschichte, Migrationsgeschichte und Material Culture Studies.'
 bio: Dr. Julia Schneidawind ist seit Oktober 2022 Wissenschaftliche Assistentin und Akademische Rätin a.Z. am Lehrstuhl für Jüdische Geschichte und Kultur der Ludwig-Maximilians-Universität München. Zuvor war sie als Wissenschaftliche Mitarbeiterin an der Bayerischen Akademie der Wissenschaften im Forschungsprojekt Judentum in Bayern tätig. Ihre Dissertation erschien im Oktober 2023 unter dem Titel Schicksale und ihre Bücher. Deutsch-jüdische Privatbibliotheken zwischen Jerusalem, Tunis und Los Angeles (Vandenhoeck & Ruprecht) und wurde mit dem Eduard-Dukesz-Preis 2023 ausgezeichnet. Sie forscht schwerpunktmäßig zur Migrations- und Kulturgeschichte des 19. und 20. Jahrhunderts, zu Material Culture Studies, Holocaustforschung und Frauengeschichte.
 research_interests:
   - Migrations- und Kulturgeschichte des 19. und 20. Jahrhunderts
@@ -21,7 +21,8 @@ research_interests:
   - Holocaustforschung
   - Frauengeschichte
   - Deutsch-jüdische Geschichte
-photo: https://www.jgk.geschichte.uni-muenchen.de/bilder/personenbilder/neu_neu_j_schneidawind_26032.jpg
+photo: /media/portrait.jpg
+photo_credit: "© Ch. Mukherjee"
 cv_de: /files/julia-schneidawind-de.pdf
 cv_en: /files/julia-schneidawind-en.pdf
 links:

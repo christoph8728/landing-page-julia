@@ -8,4 +8,4 @@ date: 2024-01-01
 draft: false
 ---
 
-Habilitationsprojekt zur Alltagsgeschichte der Gewalt gegen Frauen im langen 20. Jahrhundert.
+Habilitationsprojekt zur Alltagsgeschichte der Gewalt gegen Frauen nach 1945.
