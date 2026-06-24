@@ -264,8 +264,8 @@ a:hover { color: var(--acc); }
 /* ── MOBILE ─────────────────────────────────────────── */
 @media (max-width: 720px) {
   .hero { grid-template-columns: 1fr; }
-  .hero-photo { display: block; height: auto; order: -1; }
-  .hero-photo img { height: auto; object-fit: contain; }
+  .hero-photo { display: block; height: 220px; order: -1; }
+  .hero-photo img { height: 100%; object-fit: cover; object-position: top center; }
   .hero-text { order: 0; }
   .smark-full { display: none; }
   .smark-short { display: inline; }
