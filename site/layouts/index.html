@@ -183,7 +183,7 @@
   <aside class="saside">
     <!-- Contact -->
     <div class="ab">
-      <div class="alabel">Kontakt</div>
+      <h2 class="alabel">Kontakt</h2>
       <div class="acontact">
         {{ if and hugo.Data.profile.email_user hugo.Data.profile.email_domain }}<span class="email-protected" data-u="{{ hugo.Data.profile.email_user }}" data-d="{{ hugo.Data.profile.email_domain }}">[E-Mail-Adresse wird im Browser angezeigt]</span>{{ end }}
         {{ with hugo.Data.profile.links.lmu }}<a href="{{ . }}" target="_blank" rel="noopener">Profil — {{ hugo.Data.profile.institution }}</a>{{ else }}<a href="#">{{ hugo.Data.profile.institution }}</a>{{ end }}
@@ -195,16 +195,18 @@
     {{ $news := where .Site.RegularPages "Section" "news" }}
     {{ if $news }}
     <div class="ab">
-      <div class="alabel">Aktuelles</div>
+      <h2 class="alabel">Aktuelles</h2>
       {{ range first 5 $news }}
+      {{ $title := .Title }}
+      {{ $url := .Params.external_url }}
       <div class="anews-item">
         {{ with .Params.image }}
         <div class="anews-photo">
-          <img src="{{ . }}" alt="{{ $.Title }}">
+          <img src="{{ . }}" alt="{{ $title }}">
         </div>
         {{ end }}
         <div class="anews-date">{{ .Date.Format "Jan 2006" }}{{ with .Params.outlet }} · {{ . }}{{ end }}</div>
-        <div class="anews-text">{{ with .Params.external_url }}<a href="{{ . }}" target="_blank" rel="noopener">{{ $.Title }}</a>{{ else }}{{ $.Title }}{{ end }}</div>
+        <h3 class="anews-text">{{ if $url }}<a href="{{ $url }}" target="_blank" rel="noopener">{{ $title }}</a>{{ else }}{{ $title }}{{ end }}</h3>
       </div>
       {{ end }}
     </div>
