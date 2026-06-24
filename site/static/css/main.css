@@ -47,6 +47,7 @@ a:hover { color: var(--acc); }
 }
 .smark { font-family: var(--mono); font-size: 11.5px; font-weight: 500; color: var(--ink3); letter-spacing: .04em; text-decoration: none; }
 .smark:hover { color: var(--ink); }
+.smark-short { display: none; }
 .snav ul { display: flex; gap: 26px; list-style: none; }
 .snav a { font-family: var(--sans); font-size: 13px; font-weight: 500; letter-spacing: .02em; color: var(--ink3); text-decoration: none; }
 .snav a:hover, .snav a.on { color: var(--ink); }
@@ -263,8 +264,11 @@ a:hover { color: var(--acc); }
 /* ── MOBILE ─────────────────────────────────────────── */
 @media (max-width: 720px) {
   .hero { grid-template-columns: 1fr; }
-  .hero-photo { display: block; height: 300px; order: -1; }
+  .hero-photo { display: block; height: auto; order: -1; }
+  .hero-photo img { height: auto; object-fit: contain; }
   .hero-text { order: 0; }
+  .smark-full { display: none; }
+  .smark-short { display: inline; }
   .hero-text { padding: 40px 20px; border-right: none; }
   .snav { padding: 0 20px; }
   .snav ul { gap: 16px; }
