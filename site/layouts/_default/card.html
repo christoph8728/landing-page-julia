@@ -260,6 +260,11 @@
       </a>
       {{ end }}
     </div>
+    {{ with hugo.Data.profile.links.linkedin }}
+    <a href="{{ . }}" target="_blank" rel="noopener" class="btn-secondary btn-full">
+      in&nbsp; LinkedIn&nbsp;↗
+    </a>
+    {{ end }}
 
     <div class="divider"></div>
 
