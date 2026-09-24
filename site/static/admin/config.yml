@@ -19,7 +19,6 @@ backend:
   name: github
   repo: christoph8728/landing-page-julia
   branch: main
-  auth_type: pat                       # PAT (Phase 1). Switch to `pkce` for prod.
 
 # Where Sveltia stores uploaded images (path on disk, then URL prefix).
 media_folder: site/static/media
