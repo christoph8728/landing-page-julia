@@ -250,9 +250,10 @@ collections:
             widget: list
             required: false
             field: { name: interest, widget: string }
-          - { name: photo,  label: "Portrait",       widget: image, required: false }
-          - { name: cv_de,  label: "CV (deutsch)",   widget: file,  required: false }
-          - { name: cv_en,  label: "CV (englisch)",  widget: file,  required: false }
+          - { name: photo,         label: "Portrait",          widget: image,  required: false }
+          - { name: photo_credit, label: "Foto-Credit",       widget: string, required: false, hint: "z.B. © Vorname Nachname" }
+          - { name: cv_de,        label: "CV (deutsch)",      widget: file,   required: false }
+          - { name: cv_en,        label: "CV (englisch)",     widget: file,   required: false }
           - name: links
             label: "Externe Links"
             widget: object

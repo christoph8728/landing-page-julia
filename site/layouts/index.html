@@ -18,6 +18,7 @@
   {{ if hugo.Data.profile.photo }}
   <div class="hero-photo">
     <img src="{{ hugo.Data.profile.photo }}" alt="{{ hugo.Data.profile.name }}">
+    {{ with hugo.Data.profile.photo_credit }}<div class="hero-photo-credit">{{ . }}</div>{{ end }}
   </div>
   {{ else }}
   <div class="hero-photo">
